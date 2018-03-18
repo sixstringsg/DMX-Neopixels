@@ -32,10 +32,13 @@
 #define NEOPIXEL_PIN 6
 #define STRING_LENGTH 16
 
+#define EL_PIN 7
+
 //For now we're just controlling Red, Green, Blue, and Intensity so only need
 //4x DMX channels. First channel is Red, second is Green, third is blue, and
-//fourth is intensity
-#define DMX_SLAVE_CHANNELS 4
+//fourth is intensity.
+// And now add a fifth for EL Wire!
+#define DMX_SLAVE_CHANNELS 5
 
 // Set here the DMX address of the "fixture". Can be anything 1-512
 #define DMX_ADDRESS 1
@@ -55,6 +58,7 @@ byte red;
 byte blue;
 byte green;
 byte intensity;
+byte el_wire;
 
 void setup() {
   // Enable DMX slave interface and start recording DMX data
@@ -67,6 +71,12 @@ void setup() {
   // Initialize the NeoPixels.
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+
+  // Initialize the pin for EL Wire Relay!
+  pinMode(EL_PIN, OUTPUT);
+  // Write the pin LOW to start with so we don't turn the wire on when we don't
+  // want to. This assumes a NO relay.
+  digitalWrite(EL_PIN, LOW);
 }
 
 void loop() {
@@ -78,6 +88,7 @@ void loop() {
   green = dmx_slave.getChannelValue (DMX_ADDRESS + 1);
   blue = dmx_slave.getChannelValue (DMX_ADDRESS + 2);
   intensity = dmx_slave.getChannelValue (DMX_ADDRESS + 3);
+  el_wire = dmx_slave.getChannelValue (DMX_ADDRESS + 4);
 
   // This combines all three colors into one 32-bit integer to pass to
   // setPixelColor later. It's a function built into the Adafruit library
@@ -104,5 +115,13 @@ void loop() {
   // strip.show takes all of the previous commands we've sent to the library
   // and actually updates the color on the strip.
   strip.show();
-
+  // If the console sends a comand greater than 128/50% to the fifth channel,
+  // then turn our EL wire on. Otherwise, leave it off. This assumes a NO relay,
+  // can be changed to NC but I wouldn't recommend it for this purpose.
+  if (el_wire >= 125) {
+    digitalWrite(EL_PIN, HIGH);
+  }
+  else {
+    digitalWrite(EL_PIN, LOW);
+  }
 }
