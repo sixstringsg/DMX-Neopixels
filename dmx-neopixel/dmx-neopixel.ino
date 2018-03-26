@@ -38,7 +38,7 @@
 #define DMX_SLAVE_CHANNELS 4
 
 // Set here the DMX address of the "fixture". Can be anything 1-512
-#define DMX_ADDRESS 1
+#define DMX_ADDRESS 391
 
 //This is how we tell the Neopixel library information about the strip. For more
 //information look at the Adafruit strandtest example.
@@ -66,7 +66,10 @@ void setup() {
 
   // Initialize the NeoPixels.
   strip.begin();
+  // Set the second pixel to magenta so we know we're talking to the correct
+  strip.setPixelColor(1, 255, 0, 255);
   strip.show(); // Initialize all pixels to 'off'
+  delay (1000);
 }
 
 void loop() {
@@ -77,7 +80,7 @@ void loop() {
   //blue and intensity.
   green = dmx_slave.getChannelValue (DMX_ADDRESS + 1);
   blue = dmx_slave.getChannelValue (DMX_ADDRESS + 2);
-  intensity = dmx_slave.getChannelValue (DMX_ADDRESS + 3);
+//  intensity = dmx_slave.getChannelValue (DMX_ADDRESS + 3);
 
   // This combines all three colors into one 32-bit integer to pass to
   // setPixelColor later. It's a function built into the Adafruit library
@@ -99,7 +102,7 @@ void loop() {
   // to call this anywhere but void setup() but we're trying to get the most
   // control possible. If the strip appears to flicker, comment this line out
   // and it can be called once during setup() if max intensity is too much.
-  strip.setBrightness(intensity);
+  // strip.setBrightness(intensity);
 
   // strip.show takes all of the previous commands we've sent to the library
   // and actually updates the color on the strip.
