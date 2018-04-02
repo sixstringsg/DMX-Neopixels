@@ -39,8 +39,8 @@ void loop () {
   if (el_wire >= 127) {
     rainbow(20);
   }
-  else {
-    rainbowCycle(20);
+  if (el_wire < 127) {
+    rainbowCycle(50);
   }
 }
 
