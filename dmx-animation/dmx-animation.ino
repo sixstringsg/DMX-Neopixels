@@ -26,6 +26,10 @@ void setup() {
 
   // Initialize the pin for EL Wire Relay!
   pinMode(NEOPIXEL_PIN, OUTPUT);
+  strip.begin();
+  strip.setPixelColor(1, 255, 0, 255);
+  strip.show();
+  delay (1000);
 }
 
 void loop () {
@@ -37,7 +41,8 @@ void loop () {
   // then turn our EL wire on. Otherwise, leave it off. This assumes a NO relay,
   // can be changed to NC but I wouldn't recommend it for this purpose.
   if (el_wire >= 127) {
-    rainbow(20);
+    strip.setPixelColor(2, 255, 0, 0);
+    strip.show();
   }
   if (el_wire < 127) {
     rainbowCycle(50);
